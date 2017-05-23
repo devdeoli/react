@@ -8,7 +8,7 @@ export default class BotaoSubmitPersonalizado extends Component{
         return(
             <div className="pure-control-group">
                 <label></label>
-                <button type="submit" className="pure-button pure-button-primary">{this.props.nome}</button>
+                <input type={this.props.type} value={this.props.nome} className="pure-button pure-button-primary" />
             </div>
         );
     }

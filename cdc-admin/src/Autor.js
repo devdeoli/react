@@ -58,7 +58,7 @@ class FormularioAutor extends Component {
                     <InputPersonalizado id="nome" type="text" name="nome" value={this.state.nome} onChange={this.setNome} label="Nome"/>                                              
                     <InputPersonalizado id="email" type="email" name="email" value={this.state.email} onChange={this.setEmail} label="Email"/>                                              
                     <InputPersonalizado id="senha" type="password" name="senha" value={this.state.senha} onChange={this.setSenha} label="Senha"/>                                                                      
-                    <BotaoSubmitPersonalizado/>
+                    <BotaoSubmitPersonalizado type="submit" nome="Enviar" />
                 </form>   
             </div>
         );
@@ -118,10 +118,15 @@ export default class AutorBox extends Component {
 
     render(){
         return (
-            <div>
-                <FormularioAutor/>
-                <TabelaAutores lista={this.state.lista}/>
-            </div>
+           <div>
+                <div className="header">
+                    <h1>Cadastro de autores</h1>
+                </div>
+                <div className="content" id="content">
+                    <FormularioAutor/>
+                    <TabelaAutores lista={this.state.lista}/>
+                </div>
+           </div>
         );
     }
 }
