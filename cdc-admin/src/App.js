@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
 import './css/pure-min.css';
 import './css/side-menu.css';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-import AutorBox from './Autor';
-import Home from './Home';
+import {Link} from 'react-router-dom';
 
 
 class App extends Component {
 
   render() {    
     return (
-      <Router>
         <div id="layout">
           
            <a href="#menu" id="menuLink" className="menu-link">
@@ -30,17 +27,12 @@ class App extends Component {
               </div>
            </div>
 
-           <Route exact path="/" component={Home} />
-           <Route path="/autor" component={AutorBox} />
-           {/*<Route path="/livro" component={LivroBox} />*/}
-
             <div id="main">
                 <div className="content" id="content">
                     {this.props.children}
                 </div>
             </div>            
         </div>         
-      </Router>
     );
   }
 }
