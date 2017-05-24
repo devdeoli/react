@@ -8,50 +8,53 @@ import TratadorErros from './TratadorErros';
 class FormularioLivro extends Component {
         constructor(){
             super();
-            this.state = {nome:'', autor:'', preco:''}
+            this.state = {titulo:'', preco:'', autorId:''}
             this.enviaForm = this.enviaForm.bind(this);
-            this.setNome = this.setNome.bind(this);
-            this.setAutor = this.setAutor.bind(this);
+            this.setTitulo = this.setTitulo.bind(this);
             this.setPreco = this.setPreco.bind(this);
+            this.setAutorId = this.setAutorId.bind(this);
         }
 
         enviaForm(evento) {
             evento.preventDefault();
             $.ajax({
-                url:'',
+                url:'http://localhost:8080/api/livros',
                 contentType: 'application/json',
                 dataType: 'json',
                 type: 'post',
-                data: JSON.stringify({nome: this.state.nome, autor: this.state.autor, preco: this.state.preco}),
+                data: JSON.stringify({titulo: this.state.titulo, preco: this.state.preco, autorId: this.state.autorId}),
                 success: function(resposta){
                     PubSub.publish('atualiza-lista-livros', resposta);
-                    this.setState({nome: '', autor: '', preco: ''});
+                    this.setState({titulo: '', preco: '', autorId: ''});
                 }.bind(this),
-                erro: function(resposta){
-                    if(resposta === 400){
+                error: function(resposta){
+                    if(resposta.status === 400){
                         new TratadorErros().publicaErros(resposta.responseJSON);
                     }
+                },
+                beforeSend: function() {
+                    PubSub.publish("limpa-erros", {});
                 }
             });
         }
 
-        setNome(evento){
-            this.setState({nome: evento.target.value});
-        }
-        setAutor(evento){
-            this.setState({autor: evento.target.value});
+        setTitulo(evento){
+            this.setState({titulo: evento.target.value});
         }
         setPreco(evento){
             this.setState({preco: evento.target.value});
+        }
+        setAutorId(evento){
+            this.setState({autorId: evento.target.value});
         }
 
     render(){
         return(
              <div className="pure-form pure-form-aligned">
                 <form className="pure-form pure-form-aligned" onSubmit={this.enviaForm} method="post">
-                    <InputPersonalizado id="nome" type="text" name="nome" value={this.state.nome} onChange={this.setNome} label="Nome"/>                                              
-                    <InputPersonalizado id="autor" type="text" name="autor" value={this.state.autor} onChange={this.setautor} label="Autor"/>                                              
-                    <InputPersonalizado id="preco" type="number" name="preco" value={this.state.preco} onChange={this.setpreco} label="Preço"/>                                                                      
+                    <InputPersonalizado id="titulo" type="text" name="titulo" value={this.state.titulo} onChange={this.setTitulo} label="Título"/>                                              
+                    <InputPersonalizado id="preco" type="text" name="preco" value={this.state.preco} onChange={this.setPreco} label="Preço"/>                                                                      
+                    <InputPersonalizado id="autorId" type="text" name="autorId" value={this.state.autorId} onChange={this.setAutorId} label="Autor"/>                                              
                     <BotaoSubmitPersonalizado type="submit" nome="Enviar" />
                 </form>   
             </div>
@@ -77,9 +80,9 @@ class TabelaLivros extends Component{
                         this.props.lista.map(function(livro){
                             return(
                                 <tr key={livro.id}>
-                                    <td>{livro.nome}</td>
-                                    <td>{livro.autor}</td>
+                                    <td>{livro.titulo}</td>
                                     <td>{livro.preco}</td>
+                                    <td>{livro.autor.nome}</td>
                                 </tr>
                             );
                         })
@@ -100,7 +103,7 @@ export default class LivroBox extends Component{
     componentDidMount () {
         
         $.ajax({
-            url: '',
+            url: 'http://localhost:8080/api/livros',
             dataType: 'json',
             success: function(resposta){
                 this.setState({lista: resposta});
@@ -112,7 +115,7 @@ export default class LivroBox extends Component{
 
         PubSub.subscribe('atualiza-lista-livros', function(topico, lista){
             this.setState({lista: lista});
-        }).bind(this);
+        }.bind(this));
     }
 
     render(){

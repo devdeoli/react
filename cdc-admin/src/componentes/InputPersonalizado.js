@@ -1,7 +1,3 @@
-
-/**
- * Created by Paulo_Augusto on 04/05/2017.
- */
 import React, { Component } from 'react';
 import PubSub from 'pubsub-js';
 
@@ -12,15 +8,16 @@ export default class InputPersonalizado extends Component{
     }
 
     componentDidMount(){
-        PubSub.subscribe("erro-validacao", function (topico, erro) {
-            if(erro.field === this.props.nome){
+        PubSub.subscribe("erro-validacao",function(topico,erro){
+            console.log(erro);
+            if(erro.field == this.props.name){
                 this.setState({msgErro:erro.defaultMessage});
             }
-        }.bind(this));
-
-        PubSub.subscribe("limpa-erros", function (topico) {
-            this.setState({msgErro:''})
-        }.bind(this));
+        }.bind(this));    
+       
+        PubSub.subscribe("limpa-erros",function(topico){                        
+            this.setState({msgErro:''});                        
+        }.bind(this));    
     }
 
     render(){
