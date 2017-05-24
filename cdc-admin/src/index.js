@@ -16,6 +16,7 @@ ReactDOM.render(
                 <Route exact path="/" component={Home} />
                 <Route path="/autor" component={AutorBox} />
                 <Route path="/livro" component={LivroBox} />
+                
            </Switch>
         </App>
       </Router>
