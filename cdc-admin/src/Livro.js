@@ -54,7 +54,17 @@ class FormularioLivro extends Component {
                 <form className="pure-form pure-form-aligned" onSubmit={this.enviaForm} method="post">
                     <InputPersonalizado id="titulo" type="text" name="titulo" value={this.state.titulo} onChange={this.setTitulo} label="Título"/>                                              
                     <InputPersonalizado id="preco" type="text" name="preco" value={this.state.preco} onChange={this.setPreco} label="Preço"/>                                                                      
-                    <InputPersonalizado id="autorId" type="text" name="autorId" value={this.state.autorId} onChange={this.setAutorId} label="Autor"/>                                              
+                    <div className="pure-control-group">
+                        <label htmlFor="autorId">Autor</label>
+                        <select value={this.state.autorId} name="autorId" id="autorID" onChange={this.setAutorId}>
+                            <option value="">Selecione autor</option>
+                            {
+                                this.props.autores.map(function(autor){
+                                    return <option value={autor.id}>{autor.nome}</option>
+                                })
+                            }
+                        </select>
+                    </div>
                     <BotaoSubmitPersonalizado type="submit" nome="Enviar" />
                 </form>   
             </div>
@@ -97,7 +107,7 @@ class TabelaLivros extends Component{
 export default class LivroBox extends Component{
      constructor(){
         super();
-        this.state = {lista: []};
+        this.state = {lista: [], autores: []};
     }
 
     componentDidMount () {
@@ -107,6 +117,17 @@ export default class LivroBox extends Component{
             dataType: 'json',
             success: function(resposta){
                 this.setState({lista: resposta});
+            }.bind(this), 
+            erro: function(resposta){
+                console.log(resposta);
+            }
+        });
+
+        $.ajax({
+            url: 'http://localhost:8080/api/autores',
+            dataType: 'json',
+            success: function(resposta){
+                this.setState({autores: resposta});
             }.bind(this), 
             erro: function(resposta){
                 console.log(resposta);
@@ -125,7 +146,7 @@ export default class LivroBox extends Component{
                     <h1>Cadastro de livros</h1>
                 </div>
                 <div className="content" id="content">
-                    <FormularioLivro/>
+                    <FormularioLivro autores={this.state.autores}/>
                     <TabelaLivros lista={this.state.lista}/>
                 </div>
            </div>
