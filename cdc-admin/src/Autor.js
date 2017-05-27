@@ -27,11 +27,13 @@ class FormularioAutor extends Component {
             success: function(novaListagem) {
                 PubSub.publish('atualiza-lista-autores', novaListagem);
                 this.setState({ nome: '', email: '', senha: '' });
+                console.log(novaListagem);
             }.bind(this),
             error: function(resposta) {
-                if (resposta.status === 400) {
+                // if (resposta.status === 400) {
+                    console.log(resposta);
                     new TratadorErros().publicaErros(resposta.responseJSON);
-                }
+                // }
             },
             beforeSend: function() {
                 PubSub.publish("limpa-erros", {});
@@ -79,14 +81,14 @@ class TabelaAutores extends Component {
                 </thead>
                 <tbody>
                     {
-                    this.props.lista.map(function(autor){
-                        return (
-                        <tr key={autor.id}>
-                            <td>{autor.nome}</td>
-                            <td>{autor.email}</td>
-                        </tr>
-                        );
-                    })
+                        this.props.lista.map(function(autor){
+                            return (
+                            <tr key={autor.id}>
+                                <td>{autor.nome}</td>
+                                <td>{autor.email}</td>
+                            </tr>
+                            );
+                        })
                     }
                 </tbody>
                 </table> 
@@ -114,6 +116,7 @@ export default class AutorBox extends Component {
         PubSub.subscribe('atualiza-lista-autores', function(topico, novaLista) {
             this.setState({ lista: novaLista });
         }.bind(this));
+       
     }
 
     render(){
